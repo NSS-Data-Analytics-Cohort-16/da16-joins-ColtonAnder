@@ -4,19 +4,78 @@
 
 -- 1. Give the name, release year, and worldwide gross of the lowest grossing movie.
 --		Semi-Tough, 1977
+--		SELECT *
+--		FROM revenue
+--			FULL JOIN specs
+--		USING(movie_id)
+--		ORDER BY worldwide_gross
+--		;
 -- 2. What year has the highest average imdb rating?
 --		1991
+-- SELECT 
+-- 	release_year,
+-- 	avg(imdb_rating)
+-- FROM specs
+-- 	FULL JOIN rating
+-- 	USING(movie_id)
+-- GROUP BY release_year
+-- ;
 -- 3. What is the highest grossing G-rated movie? Which company distributed it?
+-- SELECT 
+-- 	film_title,
+-- 	imdb_rating,
+-- 	company_name
+-- FROM specs
+-- 	FULL JOIN rating
+-- 	USING(movie_id)
+-- 	Full JOIN distributors
+-- 	ON specs.domestic_distributor_id = distributors.distributor_id
+-- WHERE mpaa_rating = 'G'
+-- ORDER BY imdb_rating
+-- ;
 -- 4. Write a query that returns, for each distributor in the distributors table, the distributor name and the number of movies associated with that distributor in the movies table. Your result set should include all of the distributors, whether or not they have any movies in the movies table.
+-- SELECT 
+-- 	company_name,
+-- 	COUNT(movie_id) as movie_count
+-- FROM specs
+-- 	Full JOIN distributors
+-- 	ON specs.domestic_distributor_id = distributors.distributor_id
+-- GROUP BY company_name
+-- ;
 -- 5. Write a query that returns the five distributors with the highest average movie budget.
+-- SELECT 
+-- 	company_name,
+-- 	AVG(film_budget)
+-- FROM specs
+-- 	Full JOIN distributors
+-- 	ON specs.domestic_distributor_id = distributors.distributor_id
+-- 	FULL JOIN revenue
+-- 	USING(movie_id)
+-- WHERE film_budget IS NOT null
+-- GROUP BY company_name
+-- ORDER BY AVG(film_budget) DESC
+-- LIMIT 5
+-- ;
 -- 6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
+-- SELECT 
+-- 	film_title,
+-- 	headquarters,
+-- 	imdb_rating
+-- FROM specs
+-- 	Full JOIN distributors
+-- 	ON specs.domestic_distributor_id = distributors.distributor_id
+-- 	FULL JOIN rating
+-- 	USING(movie_id)
+-- WHERE headquarters NOT LIKE '%CA%'
+-- ORDER BY imdb_rating DESC
+-- ;
 -- 7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
+-- SELECT 
+-- 	length_in_min>120 as longer_than_two_hours,
+-- 	AVG(imdb_rating)
+-- FROM specs
+-- 	FULL JOIN rating
+-- 	USING(movie_id)
+-- GROUP BY longer_than_two_hours
 
-SELECT 
-	
-FROM specs
-	FULL JOIN rating
-	USING(movie_id)
-GROUP BY release_year
-ORDER BY AVG(imdb_rating)
-;
+-- ;
